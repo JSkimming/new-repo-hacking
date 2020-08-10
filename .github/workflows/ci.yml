@@ -46,11 +46,8 @@ jobs:
       run: >-
         dotnet pack
         -c Release
-        -o artifacts
         --include-source
         --nologo
-        /p:BuildNumber=${env:GITHUB_RUN_NUMBER}
-        /p:Description=${env:GITHUB_SHA}
 
     # - name: NuGet push
     #   run: foreach ($file in get-childitem -Path artifacts -Filter *.nupkg -Name) { dotnet nuget push artifacts/$file -s https://api.nuget.org/v3/index.json -k ${{ secrets.NuGetApiKey }} --skip-duplicate }
