@@ -28,13 +28,14 @@ on:
     - hotfix
     - hotfix/**
 
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_NOLOGO: true
+
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     name: Build and publish
-    env:
-      DOTNET_CLI_TELEMETRY_OPTOUT: true
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
     steps:
     - uses: actions/checkout@v2
