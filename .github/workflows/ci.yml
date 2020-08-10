@@ -62,6 +62,8 @@ jobs:
         -c Release
         --include-source
         --nologo
+        -p:VersionPrefix=${{ steps.gitversion.outputs.majorMinorPatch }}
+        --version-suffix ${{ steps.gitversion.outputs.fullBuildMetaData }}
 
     # - name: NuGet push
     #   run: foreach ($file in get-childitem -Path artifacts -Filter *.nupkg -Name) { dotnet nuget push artifacts/$file -s https://api.nuget.org/v3/index.json -k ${{ secrets.NuGetApiKey }} --skip-duplicate }
