@@ -1,0 +1,56 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: CI
+
+on:
+  push:
+    branches:
+    - develop
+    - master
+    - release
+    - release/**
+    - releases
+    - releases/**
+    - hotfix
+    - hotfix/**
+    tags:        
+    - v*
+
+  pull_request:
+    branches:
+    - develop
+    - master
+    - release
+    - release/**
+    - releases
+    - releases/**
+    - hotfix
+    - hotfix/**
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+
+    - name: Publish
+      run: >-
+        dotnet pack
+        -c Release
+        -o artifacts
+        --include-source
+        --nologo
+        /p:BuildNumber=${env:GITHUB_RUN_NUMBER}
+        /p:Description=${env:GITHUB_SHA}
+
+    # - name: NuGet push
+    #   run: foreach ($file in get-childitem -Path artifacts -Filter *.nupkg -Name) { dotnet nuget push artifacts/$file -s https://api.nuget.org/v3/index.json -k ${{ secrets.NuGetApiKey }} --skip-duplicate }
