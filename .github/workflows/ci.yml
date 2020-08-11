@@ -6,27 +6,11 @@ name: CI
 on:
   push:
     branches:
-    - develop
     - master
-    - release
-    - release/**
-    - releases
-    - releases/**
-    - hotfix
-    - hotfix/**
-    tags:
-    - v*
 
   pull_request:
     branches:
-    - develop
     - master
-    - release
-    - release/**
-    - releases
-    - releases/**
-    - hotfix
-    - hotfix/**
 
 env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
