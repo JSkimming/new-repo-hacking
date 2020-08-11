@@ -7,6 +7,8 @@ on:
   push:
     branches:
     - master
+    tags:
+    - v*
 
   pull_request:
     branches:
@@ -22,7 +24,8 @@ jobs:
     name: Build and publish
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
       with:
         fetch-depth: 0
 
@@ -37,10 +40,10 @@ jobs:
           versionSpec: '5.x'
 
     - name: Use GitVersion
-      id: gitversion
       uses: gittools/actions/gitversion/execute@v0.9.4
+      id: gitversion
 
-    - name: Publish
+    - name: NuGet Package
       run: >-
         dotnet pack
         -c Release
@@ -49,11 +52,19 @@ jobs:
         -p:VersionPrefix=${{ steps.gitversion.outputs.majorMinorPatch }}
         --version-suffix ${{ steps.gitversion.outputs.fullBuildMetaData }}
 
-    - uses: actions/upload-artifact@v2
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
       with:
         name: packages
         path: src/**/*.nupkg
         if-no-files-found: error
+
+    - name: NuGet GitHub Push
+      run: >-
+        dotnet nuget push src/NewRepo.Hacking/bin/Release/
+        --source https://nuget.pkg.github.com/JSkimming/index.json
+        --api-key ${{ secrets.GITHUB_TOKEN }}
+        --skip-duplicate
 
     # - name: NuGet push
     #   run: foreach ($file in get-childitem -Path artifacts -Filter *.nupkg -Name) { dotnet nuget push artifacts/$file -s https://api.nuget.org/v3/index.json -k ${{ secrets.NuGetApiKey }} --skip-duplicate }
