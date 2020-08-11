@@ -43,14 +43,16 @@ jobs:
       uses: gittools/actions/gitversion/execute@v0.9.4
       id: gitversion
 
+    # See https://andrewlock.net/version-vs-versionsuffix-vs-packageversion-what-do-they-all-mean/
     - name: NuGet Package
       run: >-
         dotnet pack
         -c Release
         --include-source
         --nologo
-        -p:VersionPrefix=${{ steps.gitversion.outputs.majorMinorPatch }}
-        --version-suffix ${{ steps.gitversion.outputs.fullBuildMetaData }}
+        -p:VersionPrefix="${{ steps.gitversion.outputs.majorMinorPatch }}"
+        --version-suffix "${{ steps.gitversion.outputs.fullBuildMetaData }}"
+        -p:InformationalVersion="${{ steps.gitversion.outputs.informationalVersion }}"
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
@@ -68,7 +70,11 @@ jobs:
         --store-password-in-clear-text
 
     - name: NuGet GitHub Push
-      run: dotnet nuget push src/NewRepo.Hacking/bin/Release/ --source github --skip-duplicate
+      run: >-
+        dotnet nuget push
+        src/NewRepo.Hacking/bin/Release/NewRepo.Hacking.${{ steps.gitversion.outputs.majorMinorPatch }}-${{ steps.gitversion.outputs.fullBuildMetaData }}.nupkg
+        --source github
+        --skip-duplicate
 
     # - name: NuGet push
     #   run: foreach ($file in get-childitem -Path artifacts -Filter *.nupkg -Name) { dotnet nuget push artifacts/$file -s https://api.nuget.org/v3/index.json -k ${{ secrets.NuGetApiKey }} --skip-duplicate }
