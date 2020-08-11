@@ -68,7 +68,7 @@ jobs:
         --store-password-in-clear-text
 
     - name: NuGet GitHub Push
-      run: dotnet nuget push src/NewRepo.Hacking/bin/Release/ --source "github"
+      run: dotnet nuget push src/NewRepo.Hacking/bin/Release/ --source github --skip-duplicate
 
     # - name: NuGet push
     #   run: foreach ($file in get-childitem -Path artifacts -Filter *.nupkg -Name) { dotnet nuget push artifacts/$file -s https://api.nuget.org/v3/index.json -k ${{ secrets.NuGetApiKey }} --skip-duplicate }

@@ -3,6 +3,14 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>James Skimming</Authors>
+    <Description>A test library.</Description>
+    <Copyright>Copyright © 2020 James Skimming</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/JSkimming/new-repo-hacking</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JSkimming/new-repo-hacking</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>test package</PackageTags>
   </PropertyGroup>
 
 </Project>
