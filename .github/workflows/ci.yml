@@ -59,12 +59,16 @@ jobs:
         path: src/**/*.nupkg
         if-no-files-found: error
 
-    - name: NuGet GitHub Push
+    - name: Add GitHub NuGet Source
       run: >-
-        dotnet nuget push src/NewRepo.Hacking/bin/Release/
-        --source https://nuget.pkg.github.com/JSkimming/index.json
-        --api-key ${{ secrets.GITHUB_TOKEN }}
-        --skip-duplicate
+        dotnet nuget add source https://nuget.pkg.github.com/JSkimming/index.json
+        --name github
+        --username JSkimming
+        --password ${{ secrets.GITHUB_TOKEN }}
+        --store-password-in-clear-text
+
+    - name: NuGet GitHub Push
+      run: dotnet nuget push src/NewRepo.Hacking/bin/Release/ --source github --skip-duplicate
 
     # - name: NuGet push
     #   run: foreach ($file in get-childitem -Path artifacts -Filter *.nupkg -Name) { dotnet nuget push artifacts/$file -s https://api.nuget.org/v3/index.json -k ${{ secrets.NuGetApiKey }} --skip-duplicate }
