@@ -43,8 +43,19 @@ jobs:
       uses: gittools/actions/gitversion/execute@v0.9.4
       id: gitversion
 
+    - name: NuGet Package
+      if: github.ref == 'refs/branch/master'
+      run: >-
+        dotnet pack
+        -c Release
+        --include-source
+        --nologo
+        -p:VersionPrefix="${{ steps.gitversion.outputs.majorMinorPatch }}"
+        -p:InformationalVersion="${{ steps.gitversion.outputs.informationalVersion }}"
+
     # See https://andrewlock.net/version-vs-versionsuffix-vs-packageversion-what-do-they-all-mean/
     - name: NuGet Package
+      if: github.ref != 'refs/branch/master'
       run: >-
         dotnet pack
         -c Release
@@ -70,6 +81,15 @@ jobs:
         --store-password-in-clear-text
 
     - name: NuGet GitHub Push
+      if: github.ref == 'refs/branch/master'
+      run: >-
+        dotnet nuget push
+        src/NewRepo.Hacking/bin/Release/NewRepo.Hacking.${{ steps.gitversion.outputs.majorMinorPatch }}.nupkg
+        --source github
+        --skip-duplicate
+
+    - name: NuGet GitHub Push
+      if: github.ref != 'refs/branch/master'
       run: >-
         dotnet nuget push
         src/NewRepo.Hacking/bin/Release/NewRepo.Hacking.${{ steps.gitversion.outputs.majorMinorPatch }}-${{ steps.gitversion.outputs.fullBuildMetaData }}.nupkg
