@@ -49,7 +49,7 @@ jobs:
 
     - name: Set PackageVersion for non tags
       if: startsWith(github.ref, 'refs/tags/v') != true
-      run: echo '::set-env name=PACKAGE_VERSION::${{ steps.gitversion.outputs.majorMinorPatch }}+${{ steps.gitversion.outputs.shortSha }}'
+      run: echo '::set-env name=PACKAGE_VERSION::${{ steps.gitversion.outputs.majorMinorPatch }}-${{ steps.gitversion.outputs.shortSha }}'
 
     # See https://andrewlock.net/version-vs-versionsuffix-vs-packageversion-what-do-they-all-mean/
     - name: NuGet Package
