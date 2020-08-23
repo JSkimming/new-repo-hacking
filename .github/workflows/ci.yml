@@ -45,11 +45,11 @@ jobs:
 
     - name: Set PackageVersion for tags
       if: startsWith(github.ref, 'refs/tags/v')
-      run: echo '::set-env name=PACKAGE_VERSION::${{ steps.gitversion.outputs.nuGetVersionV2 }}'
+      run: echo '::set-env name=PACKAGE_VERSION::${{ steps.gitversion.outputs.majorMinorPatch }}'
 
     - name: Set PackageVersion for non tags
       if: startsWith(github.ref, 'refs/tags/v') != true
-      run: echo '::set-env name=PACKAGE_VERSION::${{ steps.gitversion.outputs.nuGetVersionV2 }}-${{ steps.gitversion.outputs.shortSha }}'
+      run: echo '::set-env name=PACKAGE_VERSION::${{ steps.gitversion.outputs.majorMinorPatch }}-${{ steps.gitversion.outputs.shortSha }}'
 
     # See https://andrewlock.net/version-vs-versionsuffix-vs-packageversion-what-do-they-all-mean/
     - name: NuGet Package
@@ -57,8 +57,9 @@ jobs:
         dotnet pack
         -c Release
         --include-source
-        -p:PackageVersion=$PACKAGE_VERSION 
+        -p:PackageVersion=$PACKAGE_VERSION
         -p:VersionPrefix="${{ steps.gitversion.outputs.majorMinorPatch }}"
+        --version-suffix "${{ steps.gitversion.outputs.fullBuildMetaData }}"
         -p:InformationalVersion="${{ steps.gitversion.outputs.informationalVersion }}"
 
     - name: Upload Artifact
