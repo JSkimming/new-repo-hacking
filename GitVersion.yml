@@ -3,3 +3,6 @@ branches: {}
 ignore:
   sha: []
 merge-message-formats: {}
+branches:
+  master:
+    regex: ^(master|tags/v.+)$
