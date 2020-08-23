@@ -57,7 +57,7 @@ jobs:
         dotnet pack
         -c Release
         --include-source
-        -p:PackageVersion=$PACKAGE_VERSION
+        -p:PackageVersion="$PACKAGE_VERSION"
         -p:VersionPrefix="${{ steps.gitversion.outputs.majorMinorPatch }}"
         --version-suffix "${{ steps.gitversion.outputs.fullBuildMetaData }}"
         -p:InformationalVersion="${{ steps.gitversion.outputs.informationalVersion }}"
@@ -80,7 +80,7 @@ jobs:
     - name: NuGet GitHub Push
       run: >-
         dotnet nuget push
-        src/NewRepo.Hacking/bin/Release/NewRepo.Hacking.$PACKAGE_VERSION.nupkg
+        "src/NewRepo.Hacking/bin/Release/NewRepo.Hacking.$PACKAGE_VERSION.nupkg"
         --source github
         --skip-duplicate
 
